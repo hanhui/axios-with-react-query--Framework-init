@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+import { useState, useEffect } from 'react';
+import { useQuery } from 'react-query'
+import { userServices } from './services/'
+function App(props) {
+  const [status, setStatus] = useState(false)
+  const {
+    isLoading,
+    isFetching,
+    isError,
+    data,
+    refetch
+  } = useQuery([{name:'hanhui',pwd:'pwd'}], userServices.login)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {isLoading && <div>Loading...</div>}
+      {isFetching && <div>Fetching...</div>}
+      {isError && <div>Error</div>}
+      {data && <div>{JSON.stringify(data)}</div>}
+      <button onClick={() => {
+        // 同 swr，可以通过改变 key 重新获取数据
+        setStatus((pre) => !pre)
+      }}>click</button>
+    </>
   );
 }
 
